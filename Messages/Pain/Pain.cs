@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 
+/// This classes are based on the ISO 20022 message definitions for the pain.001.001.03 message.
 namespace Iso20022.Messages.Pain
 {
 
@@ -81,7 +82,114 @@ namespace Iso20022.Messages.Pain
         }
     }
 
-    // Define other necessary classes like CreditTransferTransactionInformation, Debtor, Creditor, etc.
-    // Include properties based on the XSD structure, paying attention to types, multiplicity, and validation rules.
+    public class CreditTransferTransactionInformation
+    {
+        [XmlElement("PmtId")]
+        public PaymentIdentification PaymentIdentification { get; set; }
+
+        [XmlElement("Amt")]
+        public Amount Amount { get; set; }
+
+        [XmlElement("ChrgBr")]
+        public ChargeBearer ChargeBearer { get; set; }
+
+        [XmlElement("Dbtr")]
+        public Party Debtor { get; set; }
+
+        [XmlElement("DbtrAcct")]
+        public Account DebtorAccount { get; set; }
+
+        [XmlElement("DbtrAgt")]
+        public FinancialInstitution DebtorAgent { get; set; }
+
+        [XmlElement("CdtrAgt")]
+        public FinancialInstitution CreditorAgent { get; set; }
+
+        [XmlElement("Cdtr")]
+        public Party Creditor { get; set; }
+
+        [XmlElement("CdtrAcct")]
+        public Account CreditorAccount { get; set; }
+
+        [XmlElement("RmtInf")]
+        public RemittanceInformation RemittanceInformation { get; set; }
+    }
+
+    public class PaymentIdentification
+    {
+        [XmlElement("InstrId")]
+        public string InstructionIdentification { get; set; }
+
+        [XmlElement("EndToEndId")]
+        public string EndToEndIdentification { get; set; }
+    }
+
+    public class Amount
+    {
+        [XmlElement("InstdAmt")]
+        public InstructedAmount InstructedAmount { get; set; }
+    }
+
+    public class InstructedAmount
+    {
+        [XmlAttribute("Ccy")]
+        public string Currency { get; set; }
+
+        [XmlText]
+        public decimal Value { get; set; }
+    }
+
+    public enum ChargeBearer
+    {
+        DEBT,
+        CRED,
+        SHAR,
+        SLEV
+    }
+
+    public class FinancialInstitution
+    {
+        [XmlElement("FinInstnId")]
+        public FinancialInstitutionIdentification FinancialInstitutionIdentification { get; set; }
+    }
+
+    public class FinancialInstitutionIdentification
+    {
+        [XmlElement("BIC")]
+        public string BIC { get; set; }
+    }
+
+    public class Account
+    {
+        [XmlElement("Id")]
+        public AccountIdentification Id { get; set; }
+    }
+
+    public class AccountIdentification
+    {
+        [XmlElement("IBAN")]
+        public string IBAN { get; set; }
+
+        // For non-IBAN countries
+        [XmlElement("Othr")]
+        public OtherAccountIdentification Other { get; set; }
+    }
+
+    public class OtherAccountIdentification
+    {
+        [XmlElement("Id")]
+        public string Identification { get; set; }
+    }
+
+    public class RemittanceInformation
+    {
+        [XmlElement("Ustrd")]
+        public List<string> Unstructured { get; set; }
+
+        public RemittanceInformation()
+        {
+            Unstructured = new List<string>();
+        }
+    }
 
 }
